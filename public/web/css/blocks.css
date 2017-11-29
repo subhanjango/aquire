@@ -3548,7 +3548,8 @@ figure {
 /*------------- #W-CREATE-FAV-PAGE --------------*/
 .w-create-fav-page {
   padding: 25px;
-  background-color: #ff5e3a; }
+  background-color: #cf3aff; 
+    background-image: url(../img/landing-bg.jpg);}
   .w-create-fav-page svg {
     fill: #fff; }
   .w-create-fav-page .olymp-star-icon {

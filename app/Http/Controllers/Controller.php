@@ -10,4 +10,11 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    private $__directory;
+    private $__module;
+    private $__pkey;
+    private $__model;
+    private $__user;
+
+   
 }

@@ -5,13 +5,70 @@ namespace App\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Socialite;
-use Google_Client;
-use Google_Service_People;
+use App\Web\User;
 
 class AuthController extends Controller
 {
+
     /**
-     * Redirect the user to the GitHub authentication page.
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        
+    }
+    /**
+     * 
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function signUp(Request $request)
+    {
+      $request->validate([
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+            'datetimepicker' => 'required|date',
+            'gender' => 'required|string',
+            'file_upload' => 'required',
+        ]);
+
+          $user =  User::signUp($request);
+
+        $imageName = time() . '.' . request()->file_upload->getClientOriginalExtension();
+        request()->file_upload->move(public_path('avatar'), $imageName);
+
+        User::where('id', $user->id)->update(['image' => asset('avatar') . $imageName]);
+
+        \Session::put('user_key', $user->id);
+
+    }
+
+    /**
+     * 
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function signIn(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+      $valid = User::signIn($request);
+   
+       if(!empty($valid)) {
+            $request->session()->flash('error', $valid);
+            return back();
+        }
+
+    }
+
+    /**
+     * Redirect the user to the FaceBook authentication page.
      *
      * @return \Illuminate\Http\Response
      */
@@ -24,7 +81,7 @@ class AuthController extends Controller
         ])->redirect();
     }
     /**
-     * Obtain the user information from GitHub.
+     * Obtain the user information from Facebook.
      *
      * @return \Illuminate\Http\Response
      */
@@ -34,13 +91,22 @@ class AuthController extends Controller
             'first_name', 'last_name', 'email', 'gender', 'birthday'
         ])->user();
 
-       
-        // All Providers
-       
-      echo 'user: ';  print_r($facebook_user->user);
-      echo 'all: ';  print_r($facebook_user);
+       if(isset($facebook_user->user))
+       {
+           
+        $data = ['name' => $facebook_user->user['first_name'] .' '.
+         $facebook_user->user['last_name'],
+        'status' => 1 , 
+        'type'  => 'facebook' , 
+        'password' => '' , 
+        'email' => isset($facebook_user->user['email']) ? $facebook_user->user['email'] : '' , 'dob' => isset($facebook_user->user['birthday']) ? $facebook_user->user['birthday'] : '' ,
+         'gender' => isset($facebook_user->user['gender']) ? $facebook_user->user['gender'] : '' ,          
+         'image' => isset($facebook_user->avatar_original) ? $facebook_user->avatar_original : '' , 
+         'profile_complete' => 0
+                ];
+       }
 
-    
-       
+        User::socialLogin($data);
+       return redirect('/home');
     }
 }

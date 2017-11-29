@@ -11,11 +11,23 @@
 |
 */
 
+
+Auth::routes();
+
+Route::group(['middleware' => 'userauth'], function () { 
 Route::get('/', function () {
     return view('web.welcome');
 });
 Route::get('login/facebook', 'Web\AuthController@redirectToProvider');
 Route::get('login/facebook/callback', 'Web\AuthController@handleProviderCallback');
-Auth::routes();
+Route::post('register-user', 'Web\AuthController@signUp');
+Route::post('register-login', 'Web\AuthController@signIn');
+ }); 
 
-Route::get('/home', 'HomeController@index')->name('home');
+ Route::group(['middleware' => 'notlogged'], function () {
+
+Route::get('/home', 'Web\HomeController@newsfeed');
+Route::get('/shop', 'Web\ShopController@shop');
+Route::post('userInterest', 'Web\UserController@userInterest');
+
+ }); 
