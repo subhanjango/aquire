@@ -19,3 +19,18 @@
 
 	<script src="{{ asset('web/js/mediaelement-and-player.min.js') }}"></script>
 	<script src="{{ asset('web/js/mediaelement-playlist-plugin.min.js') }}"></script>
+<script>
+$('#upload-file').change(function(){
+	file = $('#upload-file').val();
+		if(file != ''){
+			$('#cover_upload').submit();
+		}
+});
+$('#user_image').change(function(){
+	
+	file = $('#user_image').val();
+		if(file != ''){
+			$('#user_upload').submit();
+		}
+});
+</script>

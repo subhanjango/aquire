@@ -25,9 +25,17 @@ Route::post('register-login', 'Web\AuthController@signIn');
  }); 
 
  Route::group(['middleware' => 'notlogged'], function () {
-
+//Index page
 Route::get('/home', 'Web\HomeController@newsfeed');
-Route::get('/shop', 'Web\ShopController@shop');
 Route::post('userInterest', 'Web\UserController@userInterest');
+//Shop index page
+Route::get('/shop', 'Web\ShopController@shop');
+//uploads
+Route::post('coverUpload', 'Web\UserController@coverUpload');
+Route::post('userUpload', 'Web\UserController@userUpload');
+//products
+Route::get('products/add', 'Web\ShopController@add');
+//bye bye
+Route::get('logout', 'Web\AuthController@logout');
 
  }); 

@@ -484,7 +484,7 @@
 									</a>
 								</li>
 								<li>
-									<a href="#">
+									<a href="{{ url('logout') }}">
 										<svg class="olymp-logout-icon">
 											<use xlink:href="{{ asset('web/icons/icons.svg#olymp-logout-icon') }}"></use>
 										</svg>

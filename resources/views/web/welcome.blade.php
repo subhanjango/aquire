@@ -137,7 +137,7 @@ blog posts, show your favourite music via Stopify, earn badges and much more!
 <div class="remember">
 <div class="checkbox">
 <label>
-<input name="optionsCheckboxes" type="checkbox"> I accept the
+<input name="terms" type="checkbox" required> I accept the
 <a href="#">Terms and Conditions</a> of the website
 </label>
 </div>

@@ -29,4 +29,31 @@ class UserController extends Controller
         User::where('id',$user_id)->update(['interests'=> $interest , 'profile_complete'=>1]);
         return back();
     }
+
+    public function coverUpload(Request $request){
+        $request->validate([
+        'photo' => 'mimes:jpeg,bmp,png'
+        ]);
+         $user_id = \Session::get('user_key');
+        $imageName = $user_id.''.time().'.'.request()->cover_upload->getClientOriginalExtension();
+                    request()->cover_upload->move(public_path('images'), $imageName);
+           
+            User::where('id',$user_id)->update(['cover_image'=>'images\\'.$imageName]);
+
+            return back();
+
+    }
+    public function userUpload(Request $request){
+         $request->validate([
+        'photo' => 'mimes:jpeg,bmp,png'
+        ]);
+         $user_id = \Session::get('user_key');
+        $imageName = $user_id.''.time().'.'.request()->user_image->getClientOriginalExtension();
+                    request()->user_image->move(public_path('images'), $imageName);
+           
+            User::where('id',$user_id)->update(['image'=>'images\\'.$imageName]);
+
+            return back();
+
+    }
 }

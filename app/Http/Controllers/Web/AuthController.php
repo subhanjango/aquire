@@ -26,6 +26,11 @@ class AuthController extends Controller
      */
     public function signUp(Request $request)
     {
+        $messages = [
+    'datetimepicker.required' => 'Please enter your date of birth.',     
+    'file_upload.required' => 'Please upload your image.',
+    'terms.required' => 'Please accept terms and conditions.'
+  ];
       $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
@@ -34,16 +39,18 @@ class AuthController extends Controller
             'datetimepicker' => 'required|date',
             'gender' => 'required|string',
             'file_upload' => 'required',
-        ]);
+            'terms' => 'required', 
+      ],$messages);
 
           $user =  User::signUp($request);
 
         $imageName = time() . '.' . request()->file_upload->getClientOriginalExtension();
         request()->file_upload->move(public_path('avatar'), $imageName);
 
-        User::where('id', $user->id)->update(['image' => asset('avatar') . $imageName]);
+        User::where('id', $user->id)->update(['image' => asset('avatar') .'/'. $imageName]);
 
         \Session::put('user_key', $user->id);
+         return redirect('/home');
 
     }
 
@@ -64,6 +71,7 @@ class AuthController extends Controller
             $request->session()->flash('error', $valid);
             return back();
         }
+         return redirect('/home');
 
     }
 
@@ -108,5 +116,10 @@ class AuthController extends Controller
 
         User::socialLogin($data);
        return redirect('/home');
+    }
+
+    public function logout(){
+        \Session::flush();
+         return redirect('/home');
     }
 }

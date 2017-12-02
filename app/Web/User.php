@@ -31,6 +31,7 @@ class User extends Model
         if (count($user) > 0)
         {
         $data['profile_complete'] = $user->profile_complete;
+        unset($data['image']);
         self::where('email', $data['email'])->update($data);
         }else
         {
